@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis
+    container_name: alpha_indo_soft_redis
+    restart: always
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - "./configs/redis/redis.conf:/usr/local/etc/redis/redis.conf"
+      - "./data/redis:/data"
+      - "./logs/redis:/var/log/redis"
+    networks:
+      - alpha_indo_soft
+  mariadb:
+    image: mariadb:latest
+    container_name: alpha_indo_soft_mysql
+    hostname: localhost
+    restart: always
+    ports:
+      - '${DB_PORT}:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    networks:
+      - alpha_indo_soft
+networks:
+  alpha_indo_soft:
+    name: alpha_indo_soft
+    driver: bridge
+
+volumes:
+  data:
+    driver: local
